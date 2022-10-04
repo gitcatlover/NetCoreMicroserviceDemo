@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Web.MVC.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,10 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+//程序启动时 获取服务列表
+var serviceHelper = app.Services.GetService<IServiceHelper>();
+serviceHelper?.GetServices();
 
 app.MapControllerRoute(
     name: "default",

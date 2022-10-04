@@ -10,14 +10,16 @@ namespace Product.API.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ILogger<ProductController> _logger;
-        public ProductController(ILogger<ProductController> logger)
+        private readonly IConfiguration _configuration;
+        public ProductController(ILogger<ProductController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
         [HttpGet]
         public IActionResult Get()
         {
-            var result = $"【产品服务】{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}--{Request.HttpContext.Connection.LocalIpAddress}:{Request.HttpContext.Connection.LocalPort}";
+            var result = $"【产品服务】{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}--{Request.HttpContext.Connection.LocalIpAddress}:{_configuration["ConsulSetting:ServicePort"]}";
             return Ok(result);
         }
     }
