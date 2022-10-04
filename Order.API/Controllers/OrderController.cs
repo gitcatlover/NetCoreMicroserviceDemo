@@ -17,7 +17,7 @@ namespace Order.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var result = $"【订单服务1】{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}--{Request.HttpContext.Connection.LocalIpAddress}:{_configuration["ConsulSetting:ServicePort"]}";
+            var result = $"【订单服务】{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}--{Request.HttpContext.Connection.LocalIpAddress}:{_configuration["ConsulSetting:ServicePort"]}";
             return Ok(result);
         }
     }
