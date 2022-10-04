@@ -13,7 +13,7 @@ namespace Web.MVC.Helper
 
         public async Task<string> GetOrder()
         {
-            string[] serviceUrls = { "http://localhost:9060", "http://localhost:9061", "http://localhost:9062" };
+            //string[] serviceUrls = { "http://localhost:9060", "http://localhost:9061", "http://localhost:9062" };
 
             var consulClient = new ConsulClient(c =>
             {
@@ -24,6 +24,7 @@ namespace Web.MVC.Helper
             {
                 return await Task.FromResult("【订单服务】服务列表为空");
             }
+            var serviceUrls = services.Select(p => $"http://{p.Service.Address + ":" + p.Service.Port}").ToArray();//订单服务列表
 
             //每次随机访问一个服务实例
             var client = new RestClient(serviceUrls[new Random().Next(0, services.Length)]);
@@ -41,7 +42,7 @@ namespace Web.MVC.Helper
             });
             var services = consulClient.Health.Service("ProductService", null, true, null).Result.Response;//健康的服务
 
-            var serviceUrls = services.Select(p => $"http://{p.Service.Address + ":" + p.Service.Port}").ToArray();//订单服务列表
+            var serviceUrls = services.Select(p => $"http://{p.Service.Address + ":" + p.Service.Port}").ToArray();//产品服务列表
             if (!services.Any())
             {
                 return await Task.FromResult("【产品服务】服务列表为空");
