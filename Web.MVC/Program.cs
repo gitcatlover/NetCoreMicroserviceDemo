@@ -5,7 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IServiceHelper, ServiceHelper>();
+
+//builder.Services.AddSingleton<IServiceHelper, ServiceHelper>();
+builder.Services.AddSingleton<IServiceHelper,GatewayServiceHelper>();
 
 var app = builder.Build();
 
@@ -25,8 +27,8 @@ app.UseRouting();
 app.UseAuthorization();
 
 //程序启动时 获取服务列表
-var serviceHelper = app.Services.GetService<IServiceHelper>();
-serviceHelper?.GetServices();
+//var serviceHelper = app.Services.GetService<IServiceHelper>();
+//serviceHelper?.GetServices();
 
 app.MapControllerRoute(
     name: "default",

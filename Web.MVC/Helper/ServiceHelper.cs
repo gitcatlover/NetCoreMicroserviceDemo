@@ -59,7 +59,7 @@ namespace Web.MVC.Helper
                 Task.Run(() =>
                 {
                     //WaitTime默认为5分钟
-                    var queryOptions = new QueryOptions { WaitTime = TimeSpan.FromMinutes(10) };
+                    var queryOptions = new QueryOptions { WaitTime = TimeSpan.FromMinutes(2) };
                     while (true)
                     {
                         GetServices(queryOptions, p);
