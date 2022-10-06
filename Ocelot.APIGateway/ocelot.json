@@ -3,55 +3,98 @@
     {
       "DownstreamPathTemplate": "/Api/Product/Get", //下游服务实例
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 9050
-        },
-        {
-          "Host": "localhost",
-          "Port": 9051
-        },
-        {
-          "Host": "localhost",
-          "Port": 9052
-        }
-      ],
+      //"DownstreamHostAndPorts": [
+      //  {
+      //    "Host": "localhost",
+      //    "Port": 9050
+      //  },
+      //  {
+      //    "Host": "localhost",
+      //    "Port": 9051
+      //  },
+      //  {
+      //    "Host": "localhost",
+      //    "Port": 9052
+      //  }
+      //],
       "UpstreamPathTemplate": "/Api/Product/Get", //上游客户端
-      "UpstreamHttpMethod": [
-        "Get"
-      ],
+      "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "ProductService",
       "LoadBalancerOptions": {
         "Type": "RoundRobin" //负载均衡，轮询机制 LeastConnection/RoundRobin/NoLoadBalancer/CookieStickySessions
+      },
+      "FileCacheOptions": {
+        "TtlSeconds": 5, //缓存过期时间,5秒之内服务返回相同的数据
+        "Region": "regionname" //缓冲区名称
+      },
+      "RateLimitOptions": {
+        "ClientWhitelist": [ "SuperClient" ], //客户端白名单，不受限流影响
+        "EnableRateLimiting": true,
+        "Period": "10s",
+        "PeriodTimespan": 10, //请求上限后多少秒可以重试
+        "Limit": 1
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,//错误发生的次数
+        "DurationOfBreak": 10000,//熔断时间 10s
+        "TimeoutValue": 5000//超时时间
       }
     },
     {
       "DownstreamPathTemplate": "/Api/Order/Get",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 9060
-        },
-        {
-          "Host": "localhost",
-          "Port": 9061
-        },
-        {
-          "Host": "localhost",
-          "Port": 9062
-        }
-      ],
+      //"DownstreamHostAndPorts": [
+      //  {
+      //    "Host": "localhost",
+      //    "Port": 9060
+      //  },
+      //  {
+      //    "Host": "localhost",
+      //    "Port": 9061
+      //  },
+      //  {
+      //    "Host": "localhost",
+      //    "Port": 9062
+      //  }
+      //],
       "UpstreamPathTemplate": "/Api/Order/Get",
-      "UpstreamHttpMethod": [
-        "Get"
-      ],
+      "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "OrderService",
       "LoadBalancerOptions": {
         "Type": "RoundRobin" //负载均衡，轮询机制 LeastConnection/RoundRobin/NoLoadBalancer/CookieStickySessions
+      },
+      "FileCacheOptions": {
+        "TtlSeconds": 5,
+        "Region": "regionname"
+      },
+      "RateLimitOptions": {
+        "ClientWhitelist": [ "SuperClient" ], 
+        "EnableRateLimiting": true,
+        "Period": "10s",
+        "PeriodTimespan": 10, 
+        "Limit": 1
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 10000,
+        "TimeoutValue": 5000
       }
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:9070" //ocelot网关地址
+    "BaseUrl": "http://localhost:9070", //ocelot网关地址
+    "ServiceDiscoveryProvider": {
+      "Scheme": "http",
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul"
+    },
+    //接口限流
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": true,
+      "QuotaExceededMessage": "too many requests...",
+      "HttpStatusCode": 403,
+      "ClientIdHeader": "Test"//自定义用于标识客户端标头
+    }
   }
 }
